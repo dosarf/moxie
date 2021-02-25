@@ -16,6 +16,7 @@ class MoxieNote(MoxieBase):
 
     id = Column(Integer, primary_key=True)
 
+    # TODO in addition to being nullable, employ CHECK constraint, preferably via SqlAlchemy
     title = Column(String, nullable=False)
     """
     @name title

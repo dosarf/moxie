@@ -15,14 +15,11 @@ class SqlaSessionFactory:
         session = self.__create_session()
         try:
             yield session
-            print('COMMITTING')
             session.commit()
         except SQLAlchemyError as err:
-            print(f'ROLLING BACK SQLA ERROR {err}')
             session.rollback()
             raise
         except Exception as err:
-            print(f'ROLLING BACK {err}')
             session.rollback()
             raise
 

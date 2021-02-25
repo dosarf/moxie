@@ -6,6 +6,9 @@ from domain.sqla_session_factory import SqlaSessionFactory
 
 
 class DaoProvider:
+    """
+    Entry point class for accessing all DAO services
+    """
     def __init__(self,
                  db_url: str,
                  create_schema: bool = False):
@@ -20,4 +23,14 @@ class DaoProvider:
 
     @property
     def moxie_note_dao(self) -> MoxieNoteDao:
-        return  self.__moxie_note_dao
+        """
+        :return: The DAO service to access moxie notes
+        """
+        return self.__moxie_note_dao
+
+    @property
+    def db_url(self) -> str:
+        """
+        :return: A DB URL safe for logging purposes
+        """
+        return repr(self.__engine.url)
