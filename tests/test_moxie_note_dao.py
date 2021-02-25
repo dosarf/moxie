@@ -39,6 +39,27 @@ def test_note_title_is_mandatory(moxie_note_dao):
     assert len(moxie_note_dao.find_all()) == 0
 
 
+def test_note_title_is_non_empty(moxie_note_dao):
+    with pytest.raises(SQLAlchemyError, match='CHECK constraint failed: note_non_blank_title'):
+        moxie_note_dao.create(title='')
+
+    assert len(moxie_note_dao.find_all()) == 0
+
+
+def test_note_title_is_non_blank(moxie_note_dao):
+    with pytest.raises(SQLAlchemyError, match='CHECK constraint failed: note_non_blank_title'):
+        moxie_note_dao.create(title='  ')
+
+    assert len(moxie_note_dao.find_all()) == 0
+
+
+def test_note_title_can_have_r_n_t(moxie_note_dao):
+    created_note = moxie_note_dao.create(title='rnt\\')
+
+    assert created_note.title == 'rnt\\'
+    assert created_note.id is not None
+
+
 def are_equivalent(first: MoxieNote, second: MoxieNote) -> bool:
     return \
         first.id == second.id \
