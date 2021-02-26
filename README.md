@@ -12,7 +12,7 @@ or from PyCharm.
 Need tools `jo` and `jq` for easier JSON
 handling on the CLI.
 
-Default DB URL, for now, is `sqlite:///temp-moxie.db`.
+Default DB URL is `sqlite:///moxie.db`.
 
 ## Adding notes
 
