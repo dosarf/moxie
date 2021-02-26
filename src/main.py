@@ -1,16 +1,11 @@
 import json
-import os
-import pathlib
 import sys
 
 import click
-import migrate
-import migrate.versioning.api
-from migrate.versioning.repository import Repository
-from sqlalchemy import create_engine
 
 from domain.dao_provider import DaoProvider
 from domain.orm_helper import orm_to_dict
+from migration_helper import version_and_apply_schema_scripts, get_repository
 
 
 @click.group()
@@ -26,28 +21,14 @@ DB URL to use by default
 """
 
 
-REPOSITORY_FOLDER: str = 'moxie_schema_repository'
-"""
-The folder in which the version controlled schema migration scripts
-are stored, relative to the root folder of this project.
-"""
-
-
 @cli.command()
 @click.option('--db-url', default=DEFAULT_DB_URL, help='URL of DB to use')
 def upgrade_schema(db_url: str):
     """
     Upgrades the schema of a DB, using the migrator API.
     """
-    repository_path = pathlib.Path(os.getcwd(), REPOSITORY_FOLDER)
-    if not repository_path.exists() or not repository_path.is_dir():
-        click.echo(f'Cannot find {REPOSITORY_FOLDER}')
-        sys.exit(1)
-
-    repository = Repository(str(repository_path))
-
-    migrate.versioning.api.version_control(url=db_url, repository=repository)
-    migrate.versioning.api.upgrade(url=db_url, repository=repository)
+    version_and_apply_schema_scripts(db_url,
+                                     get_repository())
 
     with DaoProvider(db_url) as dao_provider:
         click.echo(f'Schema upgraded for {dao_provider.db_url}')

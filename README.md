@@ -6,6 +6,19 @@ $ PYTHONPATH=src pytest
 
 or from PyCharm.
 
+## Testing migrated schema
+
+By default, the unit tests for ORM queries (SqlAlchemy)
+are tested on a schema that's generated out of the ORM
+class definitions.
+
+On the other hand, real DBs have migrated schemas. To
+run the unit tests for the ORM queries, use the custom CLI
+option `--schema-creation=migrate`:
+
+```
+$ PYTHONPATH=src pytest --schema-creation=migrate
+```
 
 # Running CLI tool
 
