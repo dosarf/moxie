@@ -1,0 +1,10 @@
+SELECT ut.schemaname, ut.relname as tablename,
+CASE
+  WHEN col.column_name IS NULL THEN 'TABLE'
+  ELSE 'COLUMN'
+END as type,
+col.column_name as columnname,
+pgd.description, ut.relid, pgd.objsubid
+FROM pg_catalog.pg_statio_user_tables ut
+INNER JOIN pg_catalog.pg_description pgd ON (pgd.objoid = ut.relid)
+LEFT JOIN information_schema.columns col ON (col.ordinal_position = pgd.objsubid AND col.table_schema = ut.schemaname AND col.table_name = ut.relname);

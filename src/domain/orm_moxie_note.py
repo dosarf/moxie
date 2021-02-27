@@ -3,9 +3,7 @@ from sqlalchemy import Column, Integer, String, CheckConstraint
 from domain.moxie_base import MoxieBase
 
 
-# TODO verify that comments end up as SQL comments
-# https://github.com/sqlalchemy/sqlalchemy/issues/1546
-# TODO verifu that these comments will be used by Postgraphile
+# TODO verify that these comments will be used by Postgraphile
 # https://www.graphile.org/postgraphile/smart-comments/
 class OrmMoxieNote(MoxieBase):
     """
