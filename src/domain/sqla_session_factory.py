@@ -22,6 +22,8 @@ class SqlaSessionFactory:
         except Exception as err:
             session.rollback()
             raise
+        finally:
+            session.close()
 
     @property
     def engine(self) -> Engine:
