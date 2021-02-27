@@ -7,7 +7,7 @@ from domain.moxie_base import MoxieBase
 # https://github.com/sqlalchemy/sqlalchemy/issues/1546
 # TODO verifu that these comments will be used by Postgraphile
 # https://www.graphile.org/postgraphile/smart-comments/
-class MoxieNote(MoxieBase):
+class OrmMoxieNote(MoxieBase):
     """
     @name MoxieNote
     @synopsis A note represents an atomic recipe, how-to, a 'gist'.

@@ -4,7 +4,6 @@ import sys
 import click
 
 from domain.dao_provider import DaoProvider
-from domain.orm_helper import orm_to_dict
 from migration_helper import version_and_apply_schema_scripts, get_repository
 
 
@@ -30,7 +29,7 @@ def upgrade_schema(db_url: str):
     version_and_apply_schema_scripts(db_url,
                                      get_repository())
 
-    with DaoProvider(db_url) as dao_provider:
+    with DaoProvider.from_db_url(db_url) as dao_provider:
         click.echo(f'Schema upgraded for {dao_provider.db_url}')
 
 
@@ -41,7 +40,7 @@ def create_schema(db_url: str):
     Creates the entire (current) schema of a DB, without using the migrator API.
     DB schema created this way cannot be migrated with 'upgrade_schema'.
     """
-    with DaoProvider(db_url, create_schema=True) as dao_provider:
+    with DaoProvider.from_db_url(db_url, create_schema=True) as dao_provider:
         click.echo(f'Schema created for {dao_provider.db_url}')
 
 
@@ -51,9 +50,9 @@ def find_all(db_url: str):
     """
     Finds all (moxie) notes.
     """
-    dao_provider = DaoProvider(db_url, create_schema=False)
+    dao_provider = DaoProvider.from_db_url(db_url, create_schema=False)
     notes = dao_provider.moxie_note_dao.find_all()
-    json_notes = json.dumps([orm_to_dict(note) for note in notes])
+    json_notes = json.dumps([note.__dict__ for note in notes])
     click.echo(json_notes)
 
 
@@ -66,10 +65,10 @@ def find_by_id(
     """
     Finds a (moxie) note by its ID.
     """
-    with DaoProvider(db_url) as dao_provider:
+    with DaoProvider.from_db_url(db_url) as dao_provider:
         note = dao_provider.moxie_note_dao.find_by_id(id)
         if note:
-            click.echo(json.dumps(orm_to_dict(note)))
+            click.echo(json.dumps(note.__dict__))
         else:
             sys.exit(1)
 
@@ -89,9 +88,9 @@ def create(
 
     content = json.loads(json_content)
 
-    with DaoProvider(db_url) as dao_provider:
+    with DaoProvider.from_db_url(db_url) as dao_provider:
         note = dao_provider.moxie_note_dao.create(**content)
-        click.echo(json.dumps(orm_to_dict(note)))
+        click.echo(json.dumps(note.__dict__))
 
 
 if __name__ == '__main__':

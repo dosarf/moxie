@@ -1,10 +1,10 @@
 from typing import Dict, Any, List, Tuple
 
 import pytest
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
-from domain.moxie_note import MoxieNote
-from domain.moxie_note_dao import MoxieNoteDao
+from domain.orm_moxie_note import OrmMoxieNote
+from domain.moxie_note_dao import MoxieNoteDao, MoxieNote
 
 
 @pytest.fixture()
@@ -33,24 +33,30 @@ def test_create_returns_created_note_with_id_assigned(moxie_note_dao):
 
 
 def test_note_title_is_mandatory(moxie_note_dao):
-    with pytest.raises(SQLAlchemyError, match='NOT NULL constraint failed'):
+    note_count = len(moxie_note_dao.find_all())
+
+    with pytest.raises(IntegrityError, match='title'):
         moxie_note_dao.create(title=None)
 
-    assert len(moxie_note_dao.find_all()) == 0
+    assert len(moxie_note_dao.find_all()) == note_count
 
 
 def test_note_title_is_non_empty(moxie_note_dao):
-    with pytest.raises(SQLAlchemyError, match='CHECK constraint failed: note_non_blank_title'):
+    note_count = len(moxie_note_dao.find_all())
+
+    with pytest.raises(IntegrityError, match='note_non_blank_title'):
         moxie_note_dao.create(title='')
 
-    assert len(moxie_note_dao.find_all()) == 0
+    assert len(moxie_note_dao.find_all()) == note_count
 
 
 def test_note_title_is_non_blank(moxie_note_dao):
-    with pytest.raises(SQLAlchemyError, match='CHECK constraint failed: note_non_blank_title'):
+    note_count = len(moxie_note_dao.find_all())
+
+    with pytest.raises(IntegrityError, match='note_non_blank_title'):
         moxie_note_dao.create(title='  ')
 
-    assert len(moxie_note_dao.find_all()) == 0
+    assert len(moxie_note_dao.find_all()) == note_count
 
 
 def test_note_title_can_have_r_n_t(moxie_note_dao):
@@ -60,7 +66,7 @@ def test_note_title_can_have_r_n_t(moxie_note_dao):
     assert created_note.id is not None
 
 
-def are_equivalent(first: MoxieNote, second: MoxieNote) -> bool:
+def are_equivalent(first: OrmMoxieNote, second: OrmMoxieNote) -> bool:
     return \
         first.id == second.id \
         and first.title == second.title
@@ -77,11 +83,11 @@ def test_note_can_be_found_by_id(moxie_note_dao_with_suite):
 
 def test_find_all_orders_by_id(moxie_note_dao_with_suite):
     moxie_note_dao = moxie_note_dao_with_suite[0]
-    note_suite = list(moxie_note_dao_with_suite[1])
-    note_suite.sort(key=lambda note: note.id)
 
-    found_notes = moxie_note_dao.find_all()
+    notes = moxie_note_dao.find_all()
 
-    assert len(found_notes) == len(note_suite)
-    for idx, found_note in enumerate(found_notes):
-        assert are_equivalent(found_note, note_suite[idx])
+    note_ids = [note.id for note in notes]
+    sorted_note_ids = list(note_ids)
+    sorted_note_ids.sort()
+
+    assert note_ids == sorted_note_ids

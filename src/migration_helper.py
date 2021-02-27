@@ -2,6 +2,7 @@ import os
 import pathlib
 
 import migrate.versioning.api
+from migrate import DatabaseAlreadyControlledError
 from migrate.versioning.repository import Repository
 
 REPOSITORY_FOLDER: str = 'moxie_schema_repository'
@@ -34,5 +35,10 @@ def version_and_apply_schema_scripts(db_url: str,
     :param db_url:
     :param repository:
     """
-    migrate.versioning.api.version_control(url=db_url, repository=repository)
+    try:
+        migrate.versioning.api.version_control(url=db_url, repository=repository)
+    except DatabaseAlreadyControlledError:
+        # allow DB to be already schema version controlled
+        pass
+
     migrate.versioning.api.upgrade(url=db_url, repository=repository)
