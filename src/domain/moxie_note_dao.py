@@ -12,6 +12,7 @@ class MoxieNote:
     """
     id: int = field(repr=True, compare=True)
     title: str = field(repr=True, compare=False)
+    content: str = field(repr=False, compare=False)
 
 
 class MoxieNoteDao:
@@ -36,18 +37,20 @@ class MoxieNoteDao:
         # TODO omitted exception translation now
 
     def create(self,
-               title: str) -> MoxieNote:
-        orm = OrmMoxieNote(title=title)
+               title: str,
+               content: str) -> MoxieNote:
+        orm = OrmMoxieNote(title=title,
+                           content=content)
         with self.__create_session() as session:
             session.add(orm)
             session.flush()
             return MoxieNoteDao.orm_to_api(orm)
         # TODO omitted exception translation now
 
-
     @staticmethod
     def orm_to_api(orm: Optional[OrmMoxieNote]) -> Optional['MoxieNote']:
         if orm is not None:
-            return MoxieNote(id=orm.id,
-                             title=orm.title)
+            cols = {column.name: getattr(orm, column.name) for column in orm.__table__.columns}
+            return MoxieNote(**cols)
+
         return None

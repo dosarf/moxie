@@ -7,7 +7,7 @@ from domain.moxie_base import MoxieBase
 # https://www.graphile.org/postgraphile/smart-comments/
 class OrmMoxieNote(MoxieBase):
     """
-    @name MoxieNote
+    @name note
     @synopsis A note represents an atomic recipe, how-to, a 'gist'.
     """
     __tablename__ = 'note'
@@ -18,4 +18,10 @@ class OrmMoxieNote(MoxieBase):
     """
     @name title
     @synopsis Short title of the note, either either in interrogative (How to do X?) or imperative (Do X)
+    """
+
+    content = Column(String, CheckConstraint(r"length(trim(content, ' ')) > 0", name='note_non_blank_content'), nullable=False)
+    """
+    @name content
+    @synopsis Content of the note, in markdown format.
     """

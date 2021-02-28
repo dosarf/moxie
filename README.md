@@ -67,20 +67,22 @@ Default DB URL is `sqlite:///moxie.db`.
 Either specifying the JSON content as an argument, like
 
 ```
-$ python src/main.py create --json-content='{"title":"First ever note"}' | jq
+$ python src/main.py create --json-content='{"title":"First ever note","content":"... and its content."}' | jq
 {
-  "id": "1",
-  "title": "First ever note"
+  "id": 1,
+  "title": "First ever note",
+  "content": "... and its content."
 }
 ```
 
 or piping the JSON output from `jo` tool:
 
 ```
-$ jo title="Second note, to follow" | python src/main.py create | jq
+$ jo title="Second note, to follow" content="it also has some contents" | python src/main.py create | jq
 {
-  "id": "2",
-  "title": "Second note, to follow"
+  "id": 2,
+  "title": "Second note, to follow",
+  "content": "it also has some contents"
 }
 ```
 
@@ -92,12 +94,14 @@ is as simple as
 $ python src/main.py find-all | jq
 [
   {
-    "id": "1",
-    "title": "First ever note"
+    "id": 1,
+    "title": "First ever note",
+    "content": "... and its content."
   },
   {
-    "id": "2",
-    "title": "Second note, to follow"
+    "id": 2,
+    "title": "Second note, to follow",
+    "content": "it also has some contents"
   }
 ]
 ```
@@ -109,8 +113,9 @@ goes with
 ```
 $ python src/main.py find-by-id 2 | jq
 {
-  "id": "2",
-  "title": "Second note, to follow"
+  "id": 2,
+  "title": "Second note, to follow",
+  "content": "it also has some contents"
 }
 ```
 
