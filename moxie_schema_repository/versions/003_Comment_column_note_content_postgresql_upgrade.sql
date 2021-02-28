@@ -1,0 +1,1 @@
+COMMENT ON COLUMN note.content IS E'@name content\n@synopsis Content of the note in markdown mark up';

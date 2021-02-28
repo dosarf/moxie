@@ -20,7 +20,7 @@ class SchemaCreation(Enum):
     MIGRATE = 1
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def schema_creation(request) -> SchemaCreation:
     """
     The value translated from CLI option CMD_LINE_OPTION_SCHEMA_CREATION
@@ -35,7 +35,7 @@ class DbServer(Enum):
     POSTGRES = 1
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def db_server(request) -> DbServer:
     """
     The value translated from CLI option CMD_LINE_OPTION_DB_SERVER
@@ -65,7 +65,7 @@ def is_responsive(db_url: str) -> bool:
         return False
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def postgres(docker_ip, docker_services) -> str:
     """
     Kicks in the services defined in the docker-compose file.
@@ -89,8 +89,8 @@ def postgres(docker_ip, docker_services) -> str:
     return db_url
 
 
-@pytest.fixture()
-def engine(schema_creation, db_server, request, tmp_path) -> Engine:
+@pytest.fixture(scope='session')
+def engine(schema_creation, db_server, request, tmp_path_factory) -> Engine:
     """
     An SqlAlchemy Engine instance connected to the DB specified by
     fixtures schema_creation, db_server (translated from CLI args).
@@ -105,7 +105,7 @@ def engine(schema_creation, db_server, request, tmp_path) -> Engine:
         if SchemaCreation.ORM == schema_creation:
             db_url = 'sqlite:///:memory:'
         else:
-            tmp_db_path = tmp_path / 'moxie-test.db'
+            tmp_db_path = tmp_path_factory.mktemp('moxie-test') / 'moxie-test.db'
             db_url = f'sqlite:///{str(tmp_db_path)}'
     else:  # DbServer.POSTGRES
         db_url = request.getfixturevalue('postgres')
@@ -113,7 +113,7 @@ def engine(schema_creation, db_server, request, tmp_path) -> Engine:
     return create_engine(db_url)
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def dao_provider(engine, schema_creation) -> DaoProvider:
     """
     DaoProvider instance, with a schema initialized,
@@ -131,7 +131,7 @@ def dao_provider(engine, schema_creation) -> DaoProvider:
     obj.close()
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def moxie_note_dao(dao_provider) -> MoxieNoteDao:
     """
     The instance of service :class:`~domain.moxie_note_dao.MoxieNoteDao`

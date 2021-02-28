@@ -1,7 +1,7 @@
 # Running tests
 
 ```
-$ PYTHONPATH=src:. pytest
+$ PYTHONPATH=src:. pytest tests/
 ```
 
 or from PyCharm.
@@ -33,7 +33,7 @@ To run the unit tests for the ORM queries, use the custom CLI
 option `--schema-creation=migrate`:
 
 ```
-$ PYTHONPATH=src pytest:. --schema-creation=migrate
+$ PYTHONPATH=src pytest:. --schema-creation=migrate tests/
 ```
 
 ## Testing on PostgreSQL
@@ -45,7 +45,7 @@ To run against PostgreSQL, specify `--db-server=postgres`
 on the CLI:
 
 ```
-$ PYTHONPATH=src:. pytest --db-server=postgres
+$ PYTHONPATH=src:. pytest --db-server=postgres tests/
 ```
 
 ## Running all tests
@@ -61,6 +61,17 @@ $ ./test-all.sh
 Need tools `jo` and `jq` for easier JSON handling on the CLI.
 
 Default DB URL is `sqlite:///moxie.db`.
+
+## Creating DB
+
+For instance, for a custom DB URL `bla.db`:
+```
+$ python src/main.py upgrade-schema --db-url=sqlite:///bla.db
+Schema upgraded for sqlite:///bla.db
+```
+
+> For a PostgreSQL connection, use `postgresql://user:password@host:port/moxie`,
+> provided the database to use is called `moxie`.
 
 ## Adding notes
 
@@ -192,10 +203,12 @@ Password for user postgres:
 --------+-------------------+-----------+----------+----------------------------------
  id     | integer           |           | not null | nextval('note_id_seq'::regclass)
  title  | character varying |           | not null | 
+ ...
 Indexes:
     "note_pkey" PRIMARY KEY, btree (id)
 Check constraints:
     "note_non_blank_title" CHECK (length(btrim(title::text, ' '::text)) > 0)
+...
 ```
 
 - table `migrate_version` is the internal table used by
@@ -240,4 +253,5 @@ description | @name title                                                       
             | @synopsis Short title of the note, either either in interrogative (How to do X?) or imperative (Do X)
 relid       | 16395
 objsubid    | 2
+...
 ```

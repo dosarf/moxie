@@ -28,12 +28,14 @@ def get_repository() -> Repository:
 
 
 def version_and_apply_schema_scripts(db_url: str,
-                                     repository: Repository):
+                                     repository: Repository,
+                                     target_version: int = None):
     """
     Switches schema version control on in given DB, and applies all schema migration
     scripts to the same DB.
     :param db_url:
     :param repository:
+    :param target_version: the target version to update to
     """
     try:
         migrate.versioning.api.version_control(url=db_url, repository=repository)
@@ -41,4 +43,4 @@ def version_and_apply_schema_scripts(db_url: str,
         # allow DB to be already schema version controlled
         pass
 
-    migrate.versioning.api.upgrade(url=db_url, repository=repository)
+    migrate.versioning.api.upgrade(url=db_url, repository=repository, version=target_version)

@@ -22,12 +22,15 @@ DB URL to use by default
 
 @cli.command()
 @click.option('--db-url', default=DEFAULT_DB_URL, help='URL of DB to use')
-def upgrade_schema(db_url: str):
+@click.option('--target-version', default=None, help='Target version to update, default: latest')
+def upgrade_schema(db_url: str,
+                   target_version: int):
     """
     Upgrades the schema of a DB, using the migrator API.
     """
     version_and_apply_schema_scripts(db_url,
-                                     get_repository())
+                                     get_repository(),
+                                     target_version)
 
     with DaoProvider.from_db_url(db_url) as dao_provider:
         click.echo(f'Schema upgraded for {dao_provider.db_url}')
