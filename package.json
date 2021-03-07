@@ -1,0 +1,28 @@
+{
+  "name": "moxie",
+  "version": "1.0.0",
+  "description": "``` $ conda create -n moxie python=3.9 $ conda install -c conda-forge nodejs $ node --version v12.19.0 $ npm --version 6.14.8 $ $ npm install -g postgraphile $ which postgraphile /home/feri/miniconda3/envs/moxie/bin/postgraphile $ postgraphile --version 4.11.0 $ npm install fastify 2021-03-08 01:48:49,620 [954673434]   WARN - pl.local.NativeFileWatcherImpl - Watcher terminated with exit code 3  npm WARN saveError ENOENT: no such file or directory, open 'moxie/package.json' npm WARN enoent ENOENT: no such file or directory, open 'moxie/package.json' npm WARN moxie No description npm WARN moxie No repository field. npm WARN moxie No README data npm WARN moxie No license field.",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "fastify": "^3.13.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dosarf/moxie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dosarf/moxie/issues"
+  },
+  "homepage": "https://github.com/dosarf/moxie#readme"
+}

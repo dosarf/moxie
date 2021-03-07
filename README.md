@@ -1,3 +1,38 @@
+# Conda
+
+```
+$ conda create -n moxie python=3.9
+$ conda activate moxie
+$ conda install -c conda-forge nodejs
+$ node --version
+v12.19.0
+$ npm --version
+6.14.8
+$ npm install -g postgraphile
+$ which postgraphile
+/home/user/miniconda3/envs/moxie/bin/postgraphile
+$ postgraphile --version
+4.11.0
+$ npm install fastify
+2021-03-08 01:48:49,620 [954673434]   WARN - pl.local.NativeFileWatcherImpl - Watcher terminated with exit code 3 
+npm WARN saveError ENOENT: no such file or directory, open 'moxie/package.json'
+npm WARN enoent ENOENT: no such file or directory, open 'moxie/package.json'
+npm WARN moxie No description
+npm WARN moxie No repository field.
+npm WARN moxie No README data
+npm WARN moxie No license field.
+
++ fastify@3.13.0
+added 50 packages from 50 contributors and audited 50 packages in 5.52s
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
+TODO create package.json
+
 # Running tests
 
 ```
@@ -254,4 +289,72 @@ description | @name title                                                       
 relid       | 16395
 objsubid    | 2
 ...
+```
+
+# CLI Postgraphile trial
+
+Based on [Postgraphile CLI](https://www.graphile.org/postgraphile/usage-cli/):
+
+with moxie DB running on docker container:
+
+```
+$ postgraphile -c postgres://postgres:pwd@localhost/mox -s public -a -j
+PostGraphile v4.11.0 server listening on port 5000 🚀
+
+  ‣ GraphQL API:         http://localhost:5000/graphql
+  ‣ GraphiQL GUI/IDE:    http://localhost:5000/graphiql (RECOMMENDATION: add '--enhance-graphiql')
+  ‣ Postgres connection: postgres://postgres:[SECRET]@localhost/moxie
+  ‣ Postgres schema(s):  public
+  ‣ Documentation:       https://graphile.org/postgraphile/introduction/
+  ‣ Node.js version:     v12.19.0 on linux x64
+  ‣ Join Qwick in supporting PostGraphile development: https://graphile.org/sponsor/
+
+* * *
+```
+
+browsing to `http://localhost:5000/graphiql` and creating the following query:
+
+```
+{
+  allMoxieNotes {
+    nodes {
+      rowId,
+      title,
+      content
+    }
+  }
+}
+```
+
+got results:
+
+```
+{
+  "data": {
+    "allMoxieNotes": {
+      "nodes": [
+        {
+          "rowId": 1,
+          "title": "First note to PostgreSQL",
+          "content": "TODO content: First note to PostgreSQL"
+        },
+        ...
+      ]
+    }
+  }
+}
+```
+
+# Fastify trial
+
+The Postgraphile documentation says it can be used as
+a [library](https://www.graphile.org/postgraphile/usage-library/). Chose Fastify 3.
+
+Quick trial of [Fastify](https://www.fastify.io/): created `fastify-trial/server.js` and: 
+
+```
+$ node fastify-trial/server
+{"level":30,"time":1615160938688,"pid":117249,"hostname":"...","msg":"Server listening at http://127.0.0.1:3000"}
+$ curl http://localhost:3000/
+{"hello":"world"}
 ```
