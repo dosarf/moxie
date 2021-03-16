@@ -3,6 +3,8 @@
     "target": "es2018",
     "outDir": "./dist",
     "rootDir": "./src",
-    "module": "commonjs"
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }
