@@ -8,11 +8,11 @@ createConnection({
     port: 5432,
     username: "postgres",
     password: "pwd",
-    database: "moxie2",
+    database: "moxie",
     entities: [
         Note
     ],
-    synchronize: true,
+    synchronize: false,
     logging: true
 }).then(async connection => {
     // here you can start to work with your entities

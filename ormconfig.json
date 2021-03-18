@@ -4,8 +4,8 @@
    "port": 5432,
    "username": "postgres",
    "password": "pwd",
-   "database": "moxie2",
-   "synchronize": true,
+   "database": "moxie",
+   "synchronize": false,
    "logging": true,
    "entities": [
       "src/entity/**/*.ts"
