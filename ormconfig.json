@@ -1,0 +1,24 @@
+{
+   "type": "postgresql",
+   "host": "localhost",
+   "port": 5432,
+   "username": "postgres",
+   "password": "pwd",
+   "database": "moxie2",
+   "synchronize": true,
+   "logging": true,
+   "entities": [
+      "src/entity/**/*.ts"
+   ],
+   "migrations": [
+      "src/migration/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ],
+   "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+   }
+}

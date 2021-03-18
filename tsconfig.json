@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
+    "lib": [
+         "es5",
+         "es6"
+    ],
     "target": "es2018",
     "outDir": "./dist",
     "rootDir": "./src",
     "module": "commonjs",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "sourceMap": true
   }
 }

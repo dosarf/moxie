@@ -8,3 +8,4 @@ pgdata/
 
 # node
 node_modules/
+dist/
